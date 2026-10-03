@@ -1,0 +1,50 @@
+<!-- Igual que en LoginView: agregamos xmlns:vm para poder usar "vm:InicioViewModel"
+     como alias, y x:DataType para que los Bindings sepan contra qué clase
+     verificar los nombres de propiedades (Usuario, PedidosPendientes, etc.) -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:AvaloniaApplication4.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaApplication4.Views.InicioView"
+             x:DataType="vm:InicioViewModel">
+
+    <!-- StackPanel apila todo verticalmente, con 15px de espacio entre elementos -->
+    <StackPanel Margin="40" Spacing="15">
+
+        <!-- Este Binding usa StringFormat: combina texto fijo con el valor
+             de la propiedad NombreUsuario.
+             Si NombreUsuario = "admin", esto muestra: "¡Hola, admin!"
+             El {0} es un "placeholder" que se reemplaza por el valor real. -->
+        <TextBlock Text="{Binding NombreUsuario, StringFormat='¡Hola, {0}!'}"
+                   FontSize="24"
+                   HorizontalAlignment="Center" />
+
+        <!-- Un subtítulo fijo, sin binding, solo texto estático -->
+        <TextBlock Text="Resumen del día" FontSize="18" FontWeight="Bold" Margin="0,20,0,0" />
+
+        <!-- Mismo truco de StringFormat, ahora con un número (PedidosPendientes).
+             Si vale 3, muestra: "Pedidos pendientes: 3" -->
+        <TextBlock Text="{Binding PedidosPendientes, StringFormat='Pedidos pendientes: {0}'}" />
+
+        <!-- Mismo patrón para el texto del próximo turno -->
+        <TextBlock Text="{Binding ProximoTurno, StringFormat='Próximo turno: {0}'}" />
+
+        <Button Content="Ir al gestor Menú"
+        Command="{Binding IrAMenuCommand}"
+        HorizontalAlignment="Center"
+        Margin="0,20,0,0" />
+
+        <Button Content="Ir a Pedidos"
+        Command="{Binding IrAPedidosCommand}"
+        HorizontalAlignment="Center"
+        Margin="0,10,0,0" />
+
+        <Button Content="Ir a Turnos"
+        Command="{Binding IrATurnosCommand}"
+        HorizontalAlignment="Center"
+        Margin="0,10,0,0" />
+    </StackPanel>
+
+</UserControl>

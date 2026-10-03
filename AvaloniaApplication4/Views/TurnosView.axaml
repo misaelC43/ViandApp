@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:AvaloniaApplication4.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaApplication4.Views.TurnosView"
+             x:DataType="vm:TurnosViewModel">
+
+    <StackPanel Margin="40" Spacing="15">
+
+        <TextBlock Text="Turnos de Entrega"
+                   FontSize="22"
+                   HorizontalAlignment="Center" />
+
+        <ItemsControl ItemsSource="{Binding Pedidos}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="0,5">
+                        <StackPanel Spacing="3">
+                            <TextBlock Text="{Binding NombreVianda}" FontWeight="Bold" />
+                            <TextBlock Text="{Binding HoraPedido, StringFormat='Pedido: {0:HH:mm}'}" />
+                            <TextBlock Text="{Binding HoraEntrega, StringFormat='Entrega: {0:HH:mm}'}" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Button Content="Volver a Inicio"
+                Command="{Binding VolverAInicioCommand}"
+                HorizontalAlignment="Center"
+                Margin="0,20,0,0" />
+    </StackPanel>
+
+</UserControl>

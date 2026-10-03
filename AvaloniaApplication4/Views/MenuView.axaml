@@ -1,0 +1,37 @@
+<!-- Mismo patrón de siempre: xmlns:vm para el alias, y x:DataType
+     para que los Bindings sepan contra qué ViewModel verificar -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:AvaloniaApplication4.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaApplication4.Views.MenuView"
+             x:DataType="vm:MenuViewModel">
+
+    <!-- StackPanel apila todo verticalmente -->
+    <StackPanel Margin="40" Spacing="15">
+
+        <!-- Título fijo, sin binding -->
+        <TextBlock Text="Menú de Viandas de la Semana"
+                   FontSize="22"
+                   HorizontalAlignment="Center" />
+
+        <!-- ItemsControl: recorre la colección Viandas y dibuja
+             el DataTemplate de abajo una vez por cada elemento -->
+        <ItemsControl ItemsSource="{Binding Viandas}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox Content="{Binding Nombre}"
+                              IsChecked="{Binding Activa}"
+                              Margin="0,5" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Button Content="Volver a Inicio"
+        Command="{Binding VolverAInicioCommand}"
+        HorizontalAlignment="Center"
+        Margin="0,20,0,0" />
+    </StackPanel>
+
+</UserControl>
