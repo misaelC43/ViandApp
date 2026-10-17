@@ -26,9 +26,7 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     public partial ViewModelBase PantallaActual { get; set; }
 
-    // Lista central de pedidos, vive toda la sesión
-    public ObservableCollection<Pedido> Pedidos { get; } = new();
-
+    
 
     // El constructor se ejecuta UNA sola vez, apenas se crea
     // un MainViewModel (que pasa una sola vez, al arrancar la app).
