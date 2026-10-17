@@ -13,14 +13,20 @@
                    FontSize="22"
                    HorizontalAlignment="Center" />
 
+        <TextBlock Text="Cargando..." IsVisible="{Binding Cargando}" HorizontalAlignment="Center" />
+        <TextBlock Text="{Binding MensajeError}" Foreground="Red" HorizontalAlignment="Center" />
+
         <ItemsControl ItemsSource="{Binding Pedidos}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="0,5">
                         <StackPanel Spacing="3">
-                            <TextBlock Text="{Binding NombreVianda}" FontWeight="Bold" />
-                            <TextBlock Text="{Binding HoraPedido, StringFormat='Pedido: {0:HH:mm}'}" />
+                            <TextBlock Text="{Binding Resumen}" FontWeight="Bold" />
+                            <TextBlock Text="{Binding ClienteNombre, StringFormat='Cliente: {0}'}" />
+                            <TextBlock Text="{Binding FechaPedido, StringFormat='Pedido: {0:HH:mm}'}" />
                             <TextBlock Text="{Binding HoraEntrega, StringFormat='Entrega: {0:HH:mm}'}" />
+                            <TextBlock Text="{Binding Estado, StringFormat='Estado: {0}'}" />
+                            <TextBlock Text="{Binding Total, StringFormat='Total: ${0:N0}'}" />
                         </StackPanel>
                     </Border>
                 </DataTemplate>

@@ -16,6 +16,8 @@
         <TextBlock Text="Menú de Viandas de la Semana"
                    FontSize="22"
                    HorizontalAlignment="Center" />
+		<TextBlock Text="Cargando..." IsVisible="{Binding Cargando}" HorizontalAlignment="Center" />
+		<TextBlock Text="{Binding MensajeError}" Foreground="Red" HorizontalAlignment="Center" />
 
         <!-- ItemsControl: recorre la colección Viandas y dibuja
              el DataTemplate de abajo una vez por cada elemento -->

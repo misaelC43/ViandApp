@@ -7,29 +7,33 @@
              x:Class="AvaloniaApplication4.Views.PedidosView"
              x:DataType="vm:PedidosViewModel">
 
-    <StackPanel Margin="40" Spacing="15">
+	<StackPanel Margin="40" Spacing="15">
 
-        <TextBlock Text="Viandas Disponibles para Pedir"
+		<TextBlock Text="Viandas Disponibles para Pedir"
                    FontSize="22"
                    HorizontalAlignment="Center" />
 
-        <ItemsControl ItemsSource="{Binding ViandasDisponibles}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,5">
-                        <TextBlock Text="{Binding Nombre}" VerticalAlignment="Center" Width="350" />
-                        <Button Content="Pedir"
+		<TextBlock Text="Cargando..." IsVisible="{Binding Cargando}" HorizontalAlignment="Center" />
+		<TextBlock Text="{Binding MensajeError}" Foreground="Red" HorizontalAlignment="Center" />
+		<TextBlock Text="{Binding MensajeExito}" Foreground="Green" HorizontalAlignment="Center" />
+
+		<ItemsControl ItemsSource="{Binding ViandasDisponibles}">
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal" Spacing="10" Margin="0,5">
+						<TextBlock Text="{Binding Nombre}" VerticalAlignment="Center" Width="350" />
+						<Button Content="Pedir"
                                 Command="{Binding $parent[ItemsControl].((vm:PedidosViewModel)DataContext).PedirCommand}"
                                 CommandParameter="{Binding}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+					</StackPanel>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
 
-        <Button Content="Volver a Inicio"
+		<Button Content="Volver a Inicio"
                 Command="{Binding VolverAInicioCommand}"
                 HorizontalAlignment="Center"
                 Margin="0,20,0,0" />
-    </StackPanel>
+	</StackPanel>
 
 </UserControl>

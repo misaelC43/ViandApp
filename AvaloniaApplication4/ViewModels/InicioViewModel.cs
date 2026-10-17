@@ -3,6 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace AvaloniaApplication4.ViewModels
 {
@@ -16,9 +18,14 @@ namespace AvaloniaApplication4.ViewModels
         [ObservableProperty]
         private string _nombreUsuario = "admin";
 
+        [ObservableProperty]
+        private string _proximoTurno = "Sin Turnos Pendientes";
+
+
         // Ya no es un campo fijo: calculamos el valor cada vez que se pide,
         // leyendo directamente la cantidad real de pedidos en MainViewModel
-        public int PedidosPendientes => _mainViewModel.Pedidos.Count;
+        [ObservableProperty]
+        private int _PedidosPendientes ;
 
         
 
@@ -28,25 +35,47 @@ namespace AvaloniaApplication4.ViewModels
             _mainViewModel = mainViewModel;
             _menuViewModel = new MenuViewModel(_mainViewModel); // se crea UNA vez acá
         }
+        // Cuenta los pedidos pendientes y busca el próximo turno, ambos desde la API
+        public async Task CargarResumenAsync()
+        {
+            try
+            {
+                var pendientes = await _mainViewModel.Api.GetPedidosAsync("Pendiente");
+                PedidosPendientes = pendientes.Count;
+
+                var proximo = pendientes.OrderBy(p => p.HoraEntrega).FirstOrDefault();
+                ProximoTurno = proximo is null
+                    ? "Sin turnos pendientes"
+                    : $"{proximo.HoraEntrega:dd/MM HH:mm} hs";
+            }
+            catch (Exception)
+            {
+                // Si la API no responde, el resumen queda como estaba
+            }
+        }
+
 
         [RelayCommand]
-        private void IrAMenu()
+        private async Task IrAMenuAsync()
         {
-            // Reutilizamos la instancia única de MenuViewModel creada en el constructor
             _mainViewModel.PantallaActual = _menuViewModel;
+            await _menuViewModel.CargarAsync();   // trae las viandas de la API cada vez que entrás
         }
 
         [RelayCommand]
-        private void IrAPedidos()
+        private async Task IrAPedidosAsync()
         {
-            // Le pasamos la MISMA lista de viandas que usa Menú
-            _mainViewModel.PantallaActual = new PedidosViewModel(_mainViewModel,_menuViewModel.Viandas);
+            var pedidosVm = new PedidosViewModel(_mainViewModel);
+            _mainViewModel.PantallaActual = pedidosVm;
+            await pedidosVm.CargarAsync();   // trae las viandas activas de la API
         }
 
         [RelayCommand]
-        private void IrATurnos()
+        private async Task IrATurnosAsync()
         {
-            _mainViewModel.PantallaActual = new TurnosViewModel(_mainViewModel);
+            var turnosVm = new TurnosViewModel(_mainViewModel);
+            _mainViewModel.PantallaActual = turnosVm;
+            await turnosVm.CargarAsync();
         }
 
     }

@@ -2,12 +2,14 @@
 using AvaloniaApplication4.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
+using AvaloniaApplication4.Services;
 
 namespace AvaloniaApplication4.ViewModels;
 
 // Mismo patrón que ya usás: partial + hereda de ViewModelBase
 public partial class MainViewModel : ViewModelBase
 {
+    public ApiService Api { get; } = new();
 
     // Guardamos UNA sola instancia de InicioViewModel para toda la app
     private readonly InicioViewModel _inicioViewModel;
@@ -44,5 +46,6 @@ public partial class MainViewModel : ViewModelBase
     public void MostrarInicio()
     {
         PantallaActual = _inicioViewModel;
+        _ = _inicioViewModel.CargarResumenAsync();   // actualiza pedidos pendientes y próximo turno
     }
 }

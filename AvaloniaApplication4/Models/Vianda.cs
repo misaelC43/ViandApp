@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace AvaloniaApplication4.Models
+namespace AvaloniaApplication4.Models;
+
+public partial class Vianda : ObservableObject
 {
-    public partial class Vianda : ObservableObject
-    {
-        [ObservableProperty]
-        private string _nombre = string.Empty;
+    public int Id { get; set; }
+    public string Descripcion { get; set; } = string.Empty;
+    public decimal Precio { get; set; }
+    public int CategoriaId { get; set; }
+    public string? CategoriaNombre { get; set; }
 
-        [ObservableProperty]
-        private bool _activa = true;
-    }
+    // Observables porque el checkbox del menú las modifica
+    [ObservableProperty]
+    private string _nombre = string.Empty;
+
+    [ObservableProperty]
+    private bool _activa = true;
 }

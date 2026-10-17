@@ -1,35 +1,91 @@
-﻿using AvaloniaApplication4.Models;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Net.Http;
+using System.Threading.Tasks;
+using AvaloniaApplication4.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
 
 namespace AvaloniaApplication4.ViewModels
 {
     public partial class MenuViewModel : ViewModelBase
     {
         private readonly MainViewModel _mainViewModel;
-        public ObservableCollection<Vianda> Viandas { get; } = new()
-        {
-            new Vianda { Nombre = "Vianda Clásica - Milanesa con puré" },
-            new Vianda { Nombre = "Vianda Vegetariana - Tarta de verduras" },
-            new Vianda { Nombre = "Vianda Sin TACC - Pollo con arroz" },
-            new Vianda { Nombre = "Vianda Fitness - Ensalada con pollo grillado" }
-        };
+
+        // Arranca vacía: las viandas ahora vienen de la API
+        public ObservableCollection<Vianda> Viandas { get; } = new();
+
+        [ObservableProperty]
+        private string _mensajeError = string.Empty;
+
+        [ObservableProperty]
+        private bool _cargando;
 
         public MenuViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
         }
 
+        // Pide las viandas a la API y llena la lista
+        public async Task CargarAsync()
+        {
+            MensajeError = string.Empty;
+            Cargando = true;
+            try
+            {
+                var viandas = await _mainViewModel.Api.GetViandasAsync();
+
+                foreach (var v in Viandas)
+                    v.PropertyChanged -= OnViandaChanged;
+                Viandas.Clear();
+
+                foreach (var v in viandas)
+                {
+                    v.PropertyChanged += OnViandaChanged;   // avisame cuando cambie algo
+                    Viandas.Add(v);
+                }
+            }
+            catch (HttpRequestException)
+            {
+                MensajeError = "No se pudo conectar con la API. ¿Está corriendo?";
+            }
+            catch (Exception ex)
+            {
+                MensajeError = $"Error al cargar el menú: {ex.Message}";
+            }
+            finally
+            {
+                Cargando = false;
+            }
+        }
+
+        // Se dispara cuando se tilda o destilda un checkbox: guarda el cambio en la base
+        private async void OnViandaChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(Vianda.Activa) || sender is not Vianda vianda)
+                return;
+
+            try
+            {
+                await _mainViewModel.Api.ActualizarViandaAsync(vianda);
+                MensajeError = string.Empty;
+            }
+            catch (Exception)
+            {
+                MensajeError = "No se pudo guardar el cambio. Se restauró el estado anterior.";
+
+                // Deshacemos el cambio en pantalla (sin volver a disparar el guardado)
+                vianda.PropertyChanged -= OnViandaChanged;
+                vianda.Activa = !vianda.Activa;
+                vianda.PropertyChanged += OnViandaChanged;
+            }
+        }
+
         [RelayCommand]
         private void VolverAInicio()
         {
-            // Volvemos a la instancia de Inicio ya gestionada por MainViewModel
             _mainViewModel.MostrarInicio();
         }
-
     }
 }
