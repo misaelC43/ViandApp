@@ -89,4 +89,49 @@ public class ApiService
     {
         public string? Error { get; set; }
     }
+
+    // GET api/categorias
+    public async Task<List<Categoria>> GetCategoriasAsync()
+    {
+        return await _http.GetFromJsonAsync<List<Categoria>>("api/categorias") ?? new List<Categoria>();
+    }
+
+    // POST api/viandas
+    public async Task CrearViandaAsync(string nombre, string descripcion, decimal precio, int categoriaId)
+    {
+        var cuerpo = new { nombre, descripcion, precio, activa = true, categoriaId };
+        var respuesta = await _http.PostAsJsonAsync("api/viandas", cuerpo);
+
+        if (!respuesta.IsSuccessStatusCode)
+            throw new InvalidOperationException(await LeerErrorAsync(respuesta));
+    }
+
+    // Saca el mensaje de error de la respuesta de la API (sirve para { "error": ... } y para errores de validación)
+    private static async Task<string> LeerErrorAsync(HttpResponseMessage respuesta)
+    {
+        var mensaje = $"La API respondió con error {(int)respuesta.StatusCode}.";
+        try
+        {
+            using var doc = JsonDocument.Parse(await respuesta.Content.ReadAsStringAsync());
+            var raiz = doc.RootElement;
+
+            if (raiz.TryGetProperty("error", out var error) && error.ValueKind == JsonValueKind.String)
+                return error.GetString() ?? mensaje;
+
+            if (raiz.TryGetProperty("errors", out var errores) && errores.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var campo in errores.EnumerateObject())
+                {
+                    if (campo.Value.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var texto in campo.Value.EnumerateArray())
+                            return texto.GetString() ?? mensaje;
+                    }
+                }
+            }
+        }
+        catch (JsonException) { }
+
+        return mensaje;
+    }
 }
