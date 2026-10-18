@@ -1,5 +1,7 @@
 # ViandApp
 
+# ViandApp
+
 Aplicación de escritorio (Avalonia UI) para gestionar un emprendimiento de viandas, con una Web API (ASP.NET Core) y base de datos SQLite.
 
 - **Materia:** Programación II – Orientada a Objetos
@@ -16,10 +18,7 @@ Aplicación de escritorio (Avalonia UI) para gestionar un emprendimiento de vian
 - .NET SDK 10
 - Visual Studio 2026 (o la CLI de `dotnet`)
 - Herramienta de EF Core: `dotnet tool install --global dotnet-ef`
-- Certificado de desarrollo HTTPS de ASP.NET Core (una sola vez por PC):
-```
-  dotnet dev-certs https --trust
-```
+- Certificado de desarrollo HTTPS de ASP.NET Core (una sola vez por PC): `dotnet dev-certs https --trust`
 
 ## Configuración de la conexión
 
@@ -30,13 +29,15 @@ Aplicación de escritorio (Avalonia UI) para gestionar un emprendimiento de vian
 
 1. Clonar el repositorio.
 2. Crear la base de datos (desde la carpeta `ViandApp.Api`):
+
 ```
-   dotnet ef database update
+    dotnet ef database update
 ```
-   Genera `viandapp.db` con las tablas y datos de prueba (4 categorías y 4 viandas).
+
+    Genera `viandapp.db` con las tablas y datos de prueba (4 categorías y 4 viandas).
 3. **Iniciar primero la API:** en `ViandApp.Api`, ejecutar `dotnet run` (o iniciarla desde Visual Studio).
 4. **Después iniciar Avalonia:** en `AvaloniaApplication4`, ejecutar `dotnet run`.
-   - En Visual Studio se pueden iniciar los dos a la vez: clic derecho en la solución > Configurar proyectos de inicio > Varios proyectos de inicio, con la API arriba de la lista.
+    - En Visual Studio se pueden iniciar los dos a la vez: clic derecho en la solución > Configurar proyectos de inicio > Varios proyectos de inicio, con la API arriba de la lista.
 5. Iniciar sesión con usuario `admin` y contraseña `1234`.
 
 ## Probar la API
